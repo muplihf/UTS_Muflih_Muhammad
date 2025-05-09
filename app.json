@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.muplihf.myapp"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +33,12 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Aplikasi ini memerlukan akses ke galeri untuk memilih foto profil."
+        }
       ]
     ],
     "experiments": {
@@ -42,8 +49,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "98d4b817-78f4-4128-a2a8-c5067ac969ef"
+        "projectId": "cea94500-dd12-4a6d-a711-1ebb86140370"
       }
-    }
+    },
+    "owner": "muplihf"
   }
 }
