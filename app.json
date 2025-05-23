@@ -16,7 +16,10 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.muplihf.myapp"
+      "package": "com.muplihf.myapp",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -49,9 +52,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "cea94500-dd12-4a6d-a711-1ebb86140370"
+        "projectId": "253b89a7-2ecf-43ca-98d9-7e4d90f5c7c9"
       }
     },
-    "owner": "muplihf"
+    "owner": "muplihfdf"
   }
 }

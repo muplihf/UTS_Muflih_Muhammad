@@ -31,7 +31,7 @@ const Progress = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Your Progress</Text>
       <View style={styles.card}>
-      <Image source={require('../../assets/images/mock.png')} style={styles.image} />
+      <Image source={require('../../assets/images/react-logo.png')} style={styles.image} />
         <View style={styles.infoContainer}>
           <Text style={styles.courseTitle}>React Animations</Text>
 

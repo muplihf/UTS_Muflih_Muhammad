@@ -1,86 +1,88 @@
-import { Text, View, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import { FlatList, Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { LinearGradient } from 'expo-linear-gradient';
-
-const courses = [
-    {
-        id: 1,
-        category: 'React Animations',
-        title: 'React Animations',
-        description:
-            'React Native allows you to create smooth, dynamic user interfaces by utilizing animations, making the app more interactive and engaging.',
-        image: 'https://reactjs.org/logo-og.png',
-        isComingSoon: false,
-    },
-    {
-        id: 2,
-        category: 'Flutter',
-        title: 'Flutter Mastery',
-        description:
-            'Coming Soon: Learn how to build beautiful, high-performance apps with Flutter for both iOS and Android.',
-        image: 'https://reactjs.org/logo-og.png',
-        isComingSoon: true,
-    },
-];
+import axios from 'axios'
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setKursus } from "@/store/kursusSlice";
 
 const Home = () => {
+    const dispatch = useDispatch();
+    const kursusList = useSelector(state => state.kursus.data);
+
     const onGoToDetail = () => router.push('/detail');
     const onStartCourse = () => router.push('/Materi');
 
+    const onGetData = async () => {
+        try {
+            const response = await axios.get('http://192.168.65.246:3000/api/kursus');
+            dispatch(setKursus(response.data.data));
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        onGetData();
+    }, []);
+
+    const renderItem = ({ item }) => (
+        <View style={styles.cardContainer}>
+            <Image
+                source={{ uri: item.isComingSoon ? item.image : item.image || 'https://reactjs.org/logo-og.png' }}
+                style={[styles.image, item.isComingSoon && styles.grayscaleImage]}
+            />
+            <View style={styles.cardInfo}>
+                <View style={styles.infoHeader}>
+                    <Text style={styles.chip}>{item.category || 'No Category'}</Text>
+                    <Text style={styles.date}>May 2025</Text>
+                </View>
+                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.description}>{item.description}</Text>
+                <View style={styles.buttonContainer}>
+                    {!item.isComingSoon ? (
+                        <>
+                            <TouchableOpacity onPress={onGoToDetail} style={styles.buttonWrapper}>
+                                <LinearGradient
+                                    colors={['#6a1b9a', '#8e24aa']}
+                                    style={styles.buttonGradient}
+                                >
+                                    <Text style={styles.buttonText}>Preview</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={onStartCourse} style={styles.buttonWrapper}>
+                                <LinearGradient
+                                    colors={['#1a23ab', '#265e9e']}
+                                    style={styles.buttonGradient}
+                                >
+                                    <Text style={styles.buttonText}>Start</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        </>
+                    ) : (
+                        <View style={styles.buttonWrapper}>
+                            <LinearGradient
+                                colors={['#999999', '#bbbbbb']}
+                                style={styles.buttonGradient}
+                            >
+                                <Text style={styles.buttonText}>Coming Soon</Text>
+                            </LinearGradient>
+                        </View>
+                    )}
+                </View>
+            </View>
+        </View>
+    );
+
     return (
         <SafeAreaProvider>
-            <ScrollView>
-                <View style={styles.container}>
-                    {courses.map((course) => (
-                        <View key={course.id} style={styles.cardContainer}>
-                            <Image 
-                                source={{ uri: course.isComingSoon ? course.image : 'https://reactjs.org/logo-og.png' }}
-                                style={[styles.image, course.isComingSoon && styles.grayscaleImage]}
-                            />
-                            <View style={styles.cardInfo}>
-                                <View style={styles.infoHeader}>
-                                    <Text style={styles.chip}>{course.category}</Text>
-                                    <Text style={styles.date}>May 2025</Text>
-                                </View>
-                                <Text style={styles.title}>{course.title}</Text>
-                                <Text style={styles.description}>{course.description}</Text>
-                                <View style={styles.buttonContainer}>
-                                    {!course.isComingSoon ? (
-                                        <>
-                                            <TouchableOpacity onPress={onGoToDetail} style={styles.buttonWrapper}>
-                                                <LinearGradient
-                                                    colors={['#6a1b9a', '#8e24aa']}
-                                                    style={styles.buttonGradient}
-                                                >
-                                                    <Text style={styles.buttonText}>Preview</Text>
-                                                </LinearGradient>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={onStartCourse} style={styles.buttonWrapper}>
-                                                <LinearGradient
-                                                    colors={['#1a23ab', '#265e9e']}
-                                                    style={styles.buttonGradient}
-                                                >
-                                                    <Text style={styles.buttonText}>Start</Text>
-                                                </LinearGradient>
-                                            </TouchableOpacity>
-                                        </>
-                                    ) : (
-                                        <View style={styles.buttonWrapper}>
-                                            <LinearGradient
-                                                colors={['#999999', '#bbbbbb']}
-                                                style={styles.buttonGradient}
-                                            >
-                                                <Text style={styles.buttonText}>Coming Soon</Text>
-                                            </LinearGradient>
-                                        </View>
-                                    )}
-                                </View>
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            </ScrollView>
+            <FlatList
+                contentContainerStyle={styles.container}
+                data={kursusList}
+                renderItem={renderItem}
+                keyExtractor={item => item._id}
+            />
         </SafeAreaProvider>
     );
 };
@@ -89,7 +91,6 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         backgroundColor: '#f0f0f0',
-        flex: 1,
     },
     cardContainer: {
         flexDirection: 'row',

@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import profileReducer from './profileSlice';
 import progressReducer from './progressSlice';
+import kursusReducer from './kursusSlice';
 
 const store = configureStore({
   reducer: {
     profile: profileReducer,
     progress: progressReducer,
+    kursus: kursusReducer,
   },
 });
 
