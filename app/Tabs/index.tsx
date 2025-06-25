@@ -1,4 +1,4 @@
-import { FlatList, Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { FlatList, Text, View, StyleSheet, Image, TouchableOpacity, ToastAndroid } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -6,22 +6,30 @@ import axios from 'axios'
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setKursus } from "@/store/kursusSlice";
+import { CourseCard } from "@/components/CourseCard";
 
 const Home = () => {
     const dispatch = useDispatch();
     const kursusList = useSelector(state => state.kursus.data);
 
-    const onGoToDetail = () => router.push('/detail');
+    const onGoToDetail = (itemId:String) => router.push(`/detail?id=${itemId}`);
     const onStartCourse = () => router.push('/Materi');
 
     const onGetData = async () => {
         try {
-            const response = await axios.get('http://192.168.65.246:3000/api/kursus');
+            const response = await axios.get('https://elearning-api-gold.vercel.app/api/kursus');
             dispatch(setKursus(response.data.data));
         } catch (error) {
-            console.error(error);
+                dispatch(setKursus([]));
+                const message = error?.message || 'Gagal mengambil data';
+
+                ToastAndroid.showWithGravity(
+                    message,
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+            }
         }
-    }
 
     useEffect(() => {
         onGetData();
@@ -78,10 +86,22 @@ const Home = () => {
     return (
         <SafeAreaProvider>
             <FlatList
-                contentContainerStyle={styles.container}
+                contentContainerStyle={{ padding: 20 }}
                 data={kursusList}
-                renderItem={renderItem}
+                onRefresh={onGetData}
+                refreshing={refreshing}
                 keyExtractor={item => item._id}
+                renderItem={({ item }) => (
+                    <CourseCard
+                        onGoToDetail={() => onGoToDetail(item._id)}
+                        onStartCourse={onStartCourse}
+                        catergory={item.kategori || item.category}
+                        title={item.title}
+                        deskription={item.deskripsi || item.description}
+                        image={item.img_url || item.image}
+                        tanggal={item.tgl || "May 2025"}
+                    />
+                )}
             />
         </SafeAreaProvider>
     );

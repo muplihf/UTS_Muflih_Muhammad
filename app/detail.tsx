@@ -1,12 +1,45 @@
-import React, { useState, useRef } from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Animated, StyleSheet, FlatList, Text, TouchableOpacity, ToastAndroid } from 'react-native';
 import { ButtonTabs } from '../components/ButtonTabs';
 import Deskripsi from '../components/modules/detail/Deskripsi';
 import Index from '../components/modules/detail/ind'; 
+import { useLocalSearchParams } from 'expo-router';
+import axios from 'axios';
 
-const Detail: React.FC = () => {
+const Detail = () => {
   const [activeTabs, setActiveTabs] = useState('deskripsi');
+  const [description, setDescription] = useState('');
+  const {id} = useLocalSearchParams();
   const indicatorPosition = useRef(new Animated.Value(0)).current;
+
+  const onGetData = async () => {
+        try {
+            const response = await axios.get('https://elearning-api-gold.vercel.app/api/kursus');
+            (setDescription(response.data.data));
+        } catch (error) {
+                const message = error?.message || 'Gagal mengambil data';
+
+                ToastAndroid.showWithGravity(
+                    message,
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+            }
+        }
+        
+        const UIActiveTabs = () => {
+        if (activeTabs == 'deskripsi') return <Deskripsi description={description} />
+        if (activeTabs == 'ind') return <Index />
+        return <Deskripsi description={description} />
+      }
+
+        const onStartCourse = () => {
+          router.push('/course');
+        };
+
+    useEffect (() => {
+        onGetData();
+    }, []);
 
   const handleTabPress = (tab: string, position: number) => {
     setActiveTabs(tab);
