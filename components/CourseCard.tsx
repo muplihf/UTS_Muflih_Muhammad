@@ -1,46 +1,56 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity, Button} from "react-native";
 import { router } from "expo-router";
 
-const courses = [
-    {
-        id: 1,
-        category: 'React Animations',
-        title: 'React Animations',
-        description:
-            'React Native allows you to create smooth, dynamic user interfaces by utilizing animations, making the app more interactive and engaging.',
-        image: 'https://reactjs.org/logo-og.png',
-        isComingSoon: false,
-    },
-    {
-        id: 2,
-        category: 'Flutter',
-        title: 'Flutter Mastery',
-        description:
-            'Coming Soon: Learn how to build beautiful, high-performance apps with Flutter for both iOS and Android.',
-        image: 'https://reactjs.org/logo-og.png',
-        isComingSoon: true,
-    },
-];
+interface CourseCardType {
+    onGoToDetail?: (value:any) => void;
+    onStartCourse?: (value:any) => void;
+    title: String;
+    deskription: String;
+    category: String;
+    tanggal: String;
+    image: String;
+}
 
-    const onGoToDetail = () => router.push('/detail');
-    const onStartCourse = () => router.push('/Materi');
-
-    <View style={styles.container}>
-                    {courses.map((course) => (
-                        <View key={course.id} style={styles.cardContainer}>
+export const CourseCard=(props:CourseCardType)=>{
+    return (
+        <View style={styles.cardContainer}>
+            {/* <View key={course.id} style={styles.cardContainer}> */}
                             <Image 
-                                source={{ uri: course.isComingSoon ? course.image : 'https://reactjs.org/logo-og.png' }}
-                                style={[styles.image, course.isComingSoon && styles.grayscaleImage]}
+                                source={{ uri: props.image }}
+                                style={[styles.image]}
                             />
                             <View style={styles.cardInfo}>
                                 <View style={styles.infoHeader}>
-                                    <Text style={styles.chip}>{course.category}</Text>
+                                    <Text style={styles.chip}>{props.category}</Text>
                                     <Text style={styles.date}>May 2025</Text>
                                 </View>
-                                <Text style={styles.title}>{course.title}</Text>
-                                <Text style={styles.description}>{course.description}</Text>
+                                <Text style={styles.title}>{props.title}</Text>
+                                <Text style={styles.description}>{props.deskription}</Text>
                                 <View style={styles.buttonContainer}>
+                                    <TouchableOpacity onPress={props.onGoToDetail} style={styles.buttonWrapper}>
+                                                <LinearGradient
+                                                    colors={['#6a1b9a', '#8e24aa']}
+                                                    style={styles.buttonGradient}
+                                                >
+                                                    <Text style={styles.buttonText}>Preview</Text>
+                                                </LinearGradient>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={props.onStartCourse} style={styles.buttonWrapper}>
+                                                <LinearGradient
+                                                    colors={['#1a23ab', '#265e9e']}
+                                                    style={styles.buttonGradient}
+                                                >
+                                                    <Text style={styles.buttonText}>Start</Text>
+                                                </LinearGradient>
+                                            </TouchableOpacity>
+                                </View>
+                        </View>
+        </View>
+    )
+}
+                                {/* </View> */}
+                                {/* <View style={styles.buttonContainer}>
                                     {!course.isComingSoon ? (
                                         <>
                                             <TouchableOpacity onPress={onGoToDetail} style={styles.buttonWrapper}>
@@ -70,11 +80,85 @@ const courses = [
                                             </LinearGradient>
                                         </View>
                                     )}
-                                </View>
-                            </View>
-                        </View>
-                    ))}
-                </View>
+                                </View> */}
+                            
+
+// const courses = [
+//     {
+//         id: 1,
+//         category: 'React Animations',
+//         title: 'React Animations',
+//         description:
+//             'React Native allows you to create smooth, dynamic user interfaces by utilizing animations, making the app more interactive and engaging.',
+//         image: 'https://reactjs.org/logo-og.png',
+//         isComingSoon: false,
+//     },
+//     {
+//         id: 2,
+//         category: 'Flutter',
+//         title: 'Flutter Mastery',
+//         description:
+//             'Coming Soon: Learn how to build beautiful, high-performance apps with Flutter for both iOS and Android.',
+//         image: 'https://reactjs.org/logo-og.png',
+//         isComingSoon: true,
+//     },
+// ];
+
+//     const onGoToDetail = () => router.push('/detail');
+//     const onStartCourse = () => router.push('/Materi');
+//     export const CourseCard=(props:CourseCardType)=>{
+//     return (
+//     <View style={styles.container}>
+//                     {courses.map((course) => (
+//                         <View key={course.id} style={styles.cardContainer}>
+//                             <Image 
+//                                 source={{ uri: course.isComingSoon ? course.image : 'https://reactjs.org/logo-og.png' }}
+//                                 style={[styles.image, course.isComingSoon && styles.grayscaleImage]}
+//                             />
+//                             <View style={styles.cardInfo}>
+//                                 <View style={styles.infoHeader}>
+//                                     <Text style={styles.chip}>{course.category}</Text>
+//                                     <Text style={styles.date}>May 2025</Text>
+//                                 </View>
+//                                 <Text style={styles.title}>{course.title}</Text>
+//                                 <Text style={styles.description}>{course.description}</Text>
+//                                 <View style={styles.buttonContainer}>
+//                                     {!course.isComingSoon ? (
+//                                         <>
+//                                             <TouchableOpacity onPress={onGoToDetail} style={styles.buttonWrapper}>
+//                                                 <LinearGradient
+//                                                     colors={['#6a1b9a', '#8e24aa']}
+//                                                     style={styles.buttonGradient}
+//                                                 >
+//                                                     <Text style={styles.buttonText}>Preview</Text>
+//                                                 </LinearGradient>
+//                                             </TouchableOpacity>
+//                                             <TouchableOpacity onPress={onStartCourse} style={styles.buttonWrapper}>
+//                                                 <LinearGradient
+//                                                     colors={['#1a23ab', '#265e9e']}
+//                                                     style={styles.buttonGradient}
+//                                                 >
+//                                                     <Text style={styles.buttonText}>Start</Text>
+//                                                 </LinearGradient>
+//                                             </TouchableOpacity>
+//                                         </>
+//                                     ) : (
+//                                         <View style={styles.buttonWrapper}>
+//                                             <LinearGradient
+//                                                 colors={['#999999', '#bbbbbb']}
+//                                                 style={styles.buttonGradient}
+//                                             >
+//                                                 <Text style={styles.buttonText}>Coming Soon</Text>
+//                                             </LinearGradient>
+//                                         </View>
+//                                     )}
+//                                 </View>
+//                             </View>
+//                         </View>
+//                     ))}
+//                 </View>
+//     )
+// };
 
     const styles = StyleSheet.create({
         container: {
